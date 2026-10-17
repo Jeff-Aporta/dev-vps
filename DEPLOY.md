@@ -10,7 +10,7 @@ Estado real y reproducible. Todo en Deno 2.9.7. nginx TLS en `:9443` (certificad
 | `/` | `root /opt/erp-sqlite-new/app/erp-sqlite-front` | front estático (iswc) |
 | `/api/` | `127.0.0.1:8091` (erp-sqlite-api) | CRUD de bases + catálogos |
 | `/usrs/api/` | `127.0.0.1:8092/api/` (usrs-api) | login ES256, JWKS, usuarios/roles |
-| `/usrs/` | `127.0.0.1:8092/` (usrs-api) | SPA de usuarios (renderShell) |
+| `/usrs/` | estático `/opt/usrs/app/usrs-front` | SPA de usuarios (web components) |
 
 ## Servicios systemd
 
@@ -64,7 +64,7 @@ nginx -t && systemctl reload nginx
 
 ```nginx
 location /usrs/api/ { proxy_pass http://127.0.0.1:8092/api/; proxy_set_header X-Forwarded-For $remote_addr; proxy_set_header X-Real-IP $remote_addr; }
-location /usrs/     { proxy_pass http://127.0.0.1:8092/;     proxy_set_header X-Forwarded-For $remote_addr; proxy_set_header X-Real-IP $remote_addr; }
+location /usrs/     { alias /opt/usrs/app/usrs-front/; try_files $uri $uri/ /usrs/index.html; }
 location /api/      { proxy_pass http://127.0.0.1:8091;      proxy_set_header X-Forwarded-For $remote_addr; proxy_set_header X-Real-IP $remote_addr; }
 location /          { root /opt/erp-sqlite-new/app/erp-sqlite-front; try_files $uri $uri/ /index.html; }
 ```
@@ -77,10 +77,19 @@ curl -sk https://127.0.0.1:9443/usrs/api/.well-known/jwks.json
 curl -sk -X POST https://127.0.0.1:9443/api/login -H 'content-type: application/json' -d '{"usuario":"admin","password":"AdminTemp2026!"}'
 ```
 
+## Fronts estáticos
+
+| App | Origen |
+|---|---|
+| erp-sqlite-front | `/opt/erp-sqlite-new/app/erp-sqlite-front` (index.html + dist/cdn) |
+| usrs-front | `/opt/usrs/app/usrs-front` (index.html + src/app.css + src/usrs-app.js) |
+
+Ambos usan **Poppins** y `--iswc-card-spacing` amplio. Todo con web components del kit.
+
 ## Credenciales iniciales
 
-- usrs: `admin` / `UsrsAdmin2026!` (cambiar tras el primer login).
-- erp-sqlite: `admin` / `AdminTemp2026!` (cambiar tras el primer login).
+- usrs: `jagudeloe` / `udtccsso` (cambiar tras el primer login).
+- erp-sqlite: `jagudeloe` / `udtccsso` (cambiar tras el primer login).
 
 ## Pendiente de endurecimiento
 
