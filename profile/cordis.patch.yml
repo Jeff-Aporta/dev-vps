@@ -2,9 +2,9 @@
 - id: agent-default-model
   name: "@deepseek-ai/dsh-agent-default-model"
   config:
-    provider: deepseek-official
-    model: deepseek-flash
-    reasoningEffort: off
+    provider: minimax
+    model: MiniMax-M3
+    reasoningEffort: max
 - id: permission
   name: "@deepseek-ai/dsh-permission-presets"
   config:
