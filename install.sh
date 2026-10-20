@@ -1,7 +1,7 @@
 #!/bin/sh
-# install.sh — reproduce un VPS Ubuntu limpio para el ecosistema (Deno + dev-vps + perfil).
+# install.sh — reproduce un VPS Ubuntu limpio para el ecosistema (Deno + dsh-dev-vps + perfil).
 #
-#   sh install.sh            # raíz + Deno + dev-vps + perfil DSH
+#   sh install.sh            # raíz + Deno + dsh-dev-vps + perfil DSH
 #   DENO_VERSION=2.9.7 sh install.sh
 #
 # Idempotente. NO pisa secrets.json/env.json existentes. No instala los sistemas (erp/usrs/admn):
@@ -26,20 +26,20 @@ if ! deno --version 2>/dev/null | grep -q "^deno $DENO_VERSION "; then
 fi
 deno --version | head -1
 
-echo "· dev-vps (tools + perfil + estándar)"
+echo "· dsh-dev-vps (tools + perfil + estándar)"
 mkdir -p "$WORK"
-if [ -d "$WORK/dev-vps/.git" ]; then
-  git -C "$WORK/dev-vps" pull -q --ff-only || true
+if [ -d "$WORK/dsh-dev-vps/.git" ]; then
+  git -C "$WORK/dsh-dev-vps" pull -q --ff-only || true
 else
-  git clone -q https://github.com/Jeff-Aporta/dev-vps "$WORK/dev-vps"
+  git clone -q https://github.com/Jeff-Aporta/dsh-dev-vps "$WORK/dsh-dev-vps"
 fi
 
-echo "· perfil DSH dev-vps"
-mkdir -p /root/.dsh/profiles/dev-vps
-cp "$WORK/dev-vps/profile/cordis.patch.yml" /root/.dsh/profiles/dev-vps/cordis.patch.yml
-cp "$WORK/dev-vps/profile/package.json" /root/.dsh/profiles/dev-vps/package.json 2>/dev/null || true
+echo "· perfil DSH dsh-headless"
+mkdir -p /root/.dsh/profiles/dsh-headless
+cp "$WORK/dsh-dev-vps/profile/cordis.patch.yml" /root/.dsh/profiles/dsh-headless/cordis.patch.yml
+cp "$WORK/dsh-dev-vps/profile/package.json" /root/.dsh/profiles/dsh-headless/package.json 2>/dev/null || true
 
 echo "· secrets.json (solo si no existe)"
 [ -f "$WORK/secrets.json" ] || echo "  falta $WORK/secrets.json: súbelo con sftp-secrets"
 
-echo "✓ VPS listo. Prueba: dsh --profile dev-vps \"echo VPS-DSH-OK\""
+echo "✓ VPS listo. Prueba: dsh --profile dsh-headless \"echo VPS-DSH-OK\""

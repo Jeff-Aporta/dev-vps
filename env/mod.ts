@@ -1,6 +1,6 @@
 // env — carga y validación común de `env.json` (norma única del ecosistema VPS).
 // Se consume por CDN con SHA40 (nunca @main):
-//   import { loadEnv, EnvBaseSchema } from "https://cdn.jsdelivr.net/gh/Jeff-Aporta/dev-vps@<sha40>/env/mod.ts";
+//   import { loadEnv, EnvBaseSchema } from "https://cdn.jsdelivr.net/gh/Jeff-Aporta/dsh-dev-vps@<sha40>/env/mod.ts";
 //
 // `env.json` es por host (gitignored); `env.example.json` se versiona. Los secretos NO van en
 // env.json: se referencian como "$secret:<ruta>" y se resuelven desde `secrets.json` en tiempo

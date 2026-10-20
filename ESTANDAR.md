@@ -8,7 +8,7 @@
 ```
 <workspace>\                    # carpeta local de trabajo (no es repo)
   secrets.json                 # unico lugar de secretos (no se versiona)
-  transversales\{der,iswc-base,dev-vps,android-wc}\
+  transversales\{der,iswc-base,dsh-dev-vps,android-wc}\
   <sistema>\
     app\<sistema>-api\          # Deno, sirve SPA en / y API en /api
     app\<sistema>-front\        # componentes iswc-base, se publica por CDN
@@ -19,7 +19,7 @@
 
 Dentro de `app/` los repos; fuera, herramientas y config transversal.
 
-## 2. Las 11 leyes
+## 2. Las 12 leyes
 
 1. **Todo Deno.** Sin Node, sin Vite, sin bundler en runtime.
 2. **Todo front es iswc-base** (vanilla web components + CDN pineado SHA40).
@@ -35,6 +35,8 @@ Dentro de `app/` los repos; fuera, herramientas y config transversal.
     import desde CDN fijado a SHA40 (jsDelivr); nunca rutas locales (absolutas a carpetas de
     trabajo, relativas que salgan del repo, `file:`/`link:`, symlinks). Cada repo lo prueba con
     su `tests/hermeticidad.test.*` (WHAT: nada versionado referencia rutas fuera del proyecto).
+12. **Lo de DSH lleva prefijo `dsh-`**: repos, carpetas y perfiles (`dsh-dev-vps`, `dsh-headless`,
+    `dsh-web`, `infra/dsh-headless`). Nada se llama `legacy`: lo viejo se elimina, no se archiva en el repo.
 
 ## 3. Sync (pull + push de todos los repos)
 

@@ -1,6 +1,6 @@
-# AGENTS.md — dev-vps (CI/CD del ecosistema VPS)
+# AGENTS.md — dsh-dev-vps (CI/CD del ecosistema VPS)
 
-> **Norma única:** [ESTANDAR](https://github.com/Jeff-Aporta/dev-vps/blob/main/ESTANDAR.md). Gana sobre este archivo.
+> **Norma única:** [ESTANDAR](https://github.com/Jeff-Aporta/dsh-dev-vps/blob/main/ESTANDAR.md). Gana sobre este archivo.
 
 ## Herramientas (Deno)
 

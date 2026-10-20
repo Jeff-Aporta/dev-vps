@@ -1,5 +1,5 @@
 {
-  "name": "dev-vps",
+  "name": "dsh-headless",
   "private": true,
   "version": "1.0.0",
   "description": "Perfil DSH de operación del ecosistema VPS"
