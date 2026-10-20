@@ -5,7 +5,7 @@
 ## Arquitectura
 
 ```
-D:\VPS\
+<workspace>\                    # carpeta local de trabajo (no es repo)
 ├── secrets.json                 # secretos unicos (VPS, JWT, LLM, stagehand)
 ├── transversales\
 │   ├── der\                     # motor: identidad, permisos, patches
@@ -46,7 +46,7 @@ Solo `secrets.json` y `env.json` viajan por SFTP.
 | # | Fase | Entregable | Aceptacion |
 |---|---|---|---|
 | 0 | Estandar | `transversales/dev-vps/ESTANDAR.md` enlazado desde cada repo | Existe y todos lo enlazan |
-| 1 | Reorganizar erp-sqlite | `git mv` a `app/erp-sqlite-*`; rutas `../db`→`../../db` | Clon limpio pasa gates |
+| 1 | Reorganizar erp-sqlite | `git mv` a `app/erp-sqlite-*`; la db pasa a la raíz del monorepo | Clon limpio pasa gates |
 | 2 | `env.json` | Esquema Zod comun; `db.root`, `peers`, `front.sha`, `secrets.$secret:` | Arranca solo con env.json |
 | 3 | dev-vps | Perfil DSH + `ssh-run`, `sftp-secrets`, `deploy-pull`, `doctor`, `install.sh` | VPS limpio reproduce todo |
 | 4 | Kit ISWC | `renderShell(meta)` + hook `?s=` + perfil `server/` + `<iswc-login-gate>` | Guardianes verdes |

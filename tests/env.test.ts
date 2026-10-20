@@ -1,4 +1,5 @@
 import { assertEquals, assertRejects } from "jsr:@std/assert@1";
+import { resolve } from "node:path";
 import { loadEnv, resolveRefs, SECRET_REF } from "../env/mod.ts";
 
 Deno.test("resolveRefs resuelve $secret: y conserva lo demás", () => {
@@ -16,7 +17,7 @@ Deno.test("loadEnv valida, resuelve db.root relativo y secretos", async () => {
   try {
     await Deno.writeTextFile(dir + "/env.json", JSON.stringify({
       app: "erp-sqlite-api", port: 8091,
-      db: { root: "../../db" },
+      db: { root: "data" },
       secrets: { jwtSecret: "$secret:erp.jwtSecret", adminPassword: "$secret:erp.adminPassword" },
     }));
     await Deno.writeTextFile(dir + "/secrets.json", JSON.stringify({ erp: { jwtSecret: "s3cret", adminPassword: "p4ss" } }));
@@ -24,7 +25,7 @@ Deno.test("loadEnv valida, resuelve db.root relativo y secretos", async () => {
     assertEquals(env.app, "erp-sqlite-api");
     assertEquals(env.port, 8091);
     assertEquals(env.host, "127.0.0.1");
-    assertEquals((env.db as any).root.endsWith("db"), true);
+    assertEquals((env.db as any).root, resolve(dir, "data")); // relativo al env.json
     assertEquals((env as any).secrets.jwtSecret, "s3cret");
     assertEquals(secretsPath?.endsWith("secrets.json"), true);
   } finally {

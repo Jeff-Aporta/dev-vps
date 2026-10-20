@@ -6,7 +6,7 @@
 ## 1. Estructura
 
 ```
-D:\VPS\
+<workspace>\                    # carpeta local de trabajo (no es repo)
   secrets.json                 # unico lugar de secretos (no se versiona)
   transversales\{der,iswc-base,dev-vps,android-wc}\
   <sistema>\
@@ -19,7 +19,7 @@ D:\VPS\
 
 Dentro de `app/` los repos; fuera, herramientas y config transversal.
 
-## 2. Las 10 leyes
+## 2. Las 11 leyes
 
 1. **Todo Deno.** Sin Node, sin Vite, sin bundler en runtime.
 2. **Todo front es iswc-base** (vanilla web components + CDN pineado SHA40).
@@ -31,6 +31,10 @@ Dentro de `app/` los repos; fuera, herramientas y config transversal.
 8. **Local → git push; remoto → git pull.** Nunca SFTP de codigo.
 9. **`secrets.json` y `env.json` son lo unico que viaja por SFTP.**
 10. **Responsive obligatorio**: todo componente debe servir web y APK.
+11. **Cada proyecto es atómico y hermético.** Entre proyectos solo se consume por vendor o
+    import desde CDN fijado a SHA40 (jsDelivr); nunca rutas locales (absolutas a carpetas de
+    trabajo, relativas que salgan del repo, `file:`/`link:`, symlinks). Cada repo lo prueba con
+    su `tests/hermeticidad.test.*` (WHAT: nada versionado referencia rutas fuera del proyecto).
 
 ## 3. Sync (pull + push de todos los repos)
 
