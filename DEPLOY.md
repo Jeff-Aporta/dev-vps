@@ -7,7 +7,7 @@ Estado real y reproducible. Todo en Deno 2.9.7. nginx TLS en `:9443` (certificad
 
 | Ruta pública | Destino | Qué es |
 |---|---|---|
-| `/` | `root /opt/erp-sqlite-new/app/erp-sqlite-front` | front estático (iswc) |
+| `/` | `root /opt/erp-sqlite/app/erp-sqlite-front` | front estático (iswc) |
 | `/api/` | `127.0.0.1:8091` (erp-sqlite-api) | CRUD de bases + catálogos |
 | `/usrs/api/` | `127.0.0.1:8092/api/` (usrs-api) | login ES256, JWKS, usuarios/roles |
 | `/usrs/` | estático `/opt/usrs/app/usrs-front` | SPA de usuarios (web components) |
@@ -16,7 +16,7 @@ Estado real y reproducible. Todo en Deno 2.9.7. nginx TLS en `:9443` (certificad
 
 | Servicio | WorkingDirectory | Puerto | DENO_DIR |
 |---|---|---|---|
-| `erp-sqlite-api` | `/opt/erp-sqlite-new/app/erp-sqlite-api` | 8091 | `/opt/erp-sqlite-new/.deno` |
+| `erp-sqlite-api` | `/opt/erp-sqlite/app/erp-sqlite-api` | 8091 | `/opt/erp-sqlite/.deno` |
 | `usrs-api` | `/opt/usrs/app/usrs-api` | 8092 | `/opt/usrs/.deno` |
 
 ```ini
@@ -33,8 +33,8 @@ Environment=DENO_DIR=/opt/usrs/.deno
 - `/opt/usrs/secrets.json` — `{ usrs: { jwt: { privateJwk, publicJwk }, jwtSecret, pepper, adminPassword } }` (chmod 600).
 - `/opt/usrs/app/usrs-api/env.json` — `db.root=/opt/usrs/db`, `db.sistema=_sistema/usrs.sqlite`, `identity.jwt.alg=ES256`,
   `identity.trustProxy=1`, `permissions.grupo=usrs`, secretos por `$secret:usrs.*`.
-- `/opt/erp-sqlite-new/secrets.json` — `{ erp: { jwtSecret, adminPassword } }` (chmod 600).
-- `/opt/erp-sqlite-new/app/erp-sqlite-api/env.json` — `db.root=/opt/erp-sqlite-new/db`.
+- `/opt/erp-sqlite/secrets.json` — `{ erp: { jwtSecret, adminPassword } }` (chmod 600).
+- `/opt/erp-sqlite/app/erp-sqlite-api/env.json` — `db.root=/opt/erp-sqlite/db`.
 
 ## Despliegue desde cero
 
@@ -45,12 +45,12 @@ unzip -oq /tmp/deno.zip -d /usr/local/bin && chmod 755 /usr/local/bin/deno
 
 # 2) repos
 git clone --recurse-submodules https://github.com/Jeff-Aporta/usrs /opt/usrs
-git clone --recurse-submodules https://github.com/Jeff-Aporta/erp-sqlite /opt/erp-sqlite-new
-mkdir -p /opt/usrs/db/_sistema /opt/usrs/.deno /opt/erp-sqlite-new/db/_sistema /opt/erp-sqlite-new/.deno
+git clone --recurse-submodules https://github.com/Jeff-Aporta/erp-sqlite /opt/erp-sqlite
+mkdir -p /opt/usrs/db/_sistema /opt/usrs/.deno /opt/erp-sqlite/db/_sistema /opt/erp-sqlite/.deno
 
 # 3) cache (primera vez, con red)
 cd /opt/usrs/app/usrs-api && DENO_DIR=/opt/usrs/.deno deno cache src/main.ts
-cd /opt/erp-sqlite-new/app/erp-sqlite-api && DENO_DIR=/opt/erp-sqlite-new/.deno deno cache src/main.ts
+cd /opt/erp-sqlite/app/erp-sqlite-api && DENO_DIR=/opt/erp-sqlite/.deno deno cache src/main.ts
 
 # 4) config: copiar secrets.json + env.json (SFTP; nunca por git)
 #    ver las rutas de arriba.
@@ -66,7 +66,7 @@ nginx -t && systemctl reload nginx
 location /usrs/api/ { proxy_pass http://127.0.0.1:8092/api/; proxy_set_header X-Forwarded-For $remote_addr; proxy_set_header X-Real-IP $remote_addr; }
 location /usrs/     { alias /opt/usrs/app/usrs-front/; try_files $uri $uri/ /usrs/index.html; }
 location /api/      { proxy_pass http://127.0.0.1:8091;      proxy_set_header X-Forwarded-For $remote_addr; proxy_set_header X-Real-IP $remote_addr; }
-location /          { root /opt/erp-sqlite-new/app/erp-sqlite-front; try_files $uri $uri/ /index.html; }
+location /          { root /opt/erp-sqlite/app/erp-sqlite-front; try_files $uri $uri/ /index.html; }
 ```
 
 ## Verificación
@@ -81,7 +81,7 @@ curl -sk -X POST https://127.0.0.1:9443/api/login -H 'content-type: application/
 
 | App | Origen |
 |---|---|
-| erp-sqlite-front | `/opt/erp-sqlite-new/app/erp-sqlite-front` (index.html + dist/cdn) |
+| erp-sqlite-front | `/opt/erp-sqlite/app/erp-sqlite-front` (index.html + dist/cdn) |
 | usrs-front | `/opt/usrs/app/usrs-front` (index.html + src/app.css + src/usrs-app.js) |
 
 Ambos usan **Poppins** y `--iswc-card-spacing` amplio. Todo con web components del kit.
